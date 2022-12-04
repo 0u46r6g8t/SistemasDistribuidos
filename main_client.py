@@ -4,7 +4,7 @@ from services.client import Cliente as Client
 from flask import Flask, request
 
 HOST_IP = '127.0.0.1'
-HOST_PORT = 11000
+HOST_PORT = 5000
 app = Flask("Client chat")
 functions = FunctionUtils()
 

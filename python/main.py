@@ -4,8 +4,9 @@ from services.sql_connection import MysqlConnection
 
 
 def mainServer():
-    connector = MysqlConnection('127.0.0.1', 'root', 'Leontechh@15', 'chatRMI')
+    connector = MysqlConnection()
     serverMain = Server('127.0.0.1', 11000, connector)
+
     while True:
         if serverMain:
             serverMain.listenMessage()
@@ -13,7 +14,8 @@ def mainServer():
 
 # Try exception error
 try:
-    mainServer()
+    # mainServer()
+    print("oi")
 except TypeError as e:
     print(e)
     print("Verify your params")

@@ -6,8 +6,8 @@ from utils.functions import FunctionUtils
 
 
 class MysqlConnection:
-    def __init__(self, hostU, userU, passwordU, dbU):
-        self.connector = mysql.connector.connect(user=userU, password=passwordU, host=hostU, database=dbU)
+    def __init__(self):
+        self.connector = mysql.connector.connect(user='root', host='mysql', database='chatRMI', port=3306)
         self.query = ''
         self.functionAux = FunctionUtils()
 
