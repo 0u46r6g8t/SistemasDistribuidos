@@ -7,7 +7,7 @@ from utils.functions import FunctionUtils
 
 class MysqlConnection:
     def __init__(self):
-        self.connector = mysql.connector.connect(user='root', host='mysql', database='chatRMI', port=3306)
+        self.connector = mysql.connector.connect(user='root', password='password', host='localhost', database='sakila', port=3306)
         self.query = ''
         self.functionAux = FunctionUtils()
 

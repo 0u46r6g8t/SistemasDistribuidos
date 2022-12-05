@@ -14,8 +14,7 @@ def mainServer():
 
 # Try exception error
 try:
-    # mainServer()
-    print("oi")
+    mainServer()
 except TypeError as e:
     print(e)
     print("Verify your params")
