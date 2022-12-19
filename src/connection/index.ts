@@ -1,21 +1,21 @@
-import { IMessage } from "../interface/IMessage";
-import { IUser, IUserBanco } from "../interface/IUser";
+import { IMessage } from '../interface/IMessage';
+import { IUser, IUserBanco } from '../interface/IUser';
 
-import server from "../config/server";
-import ServiceUser from "../services/user";
+import server from '../config/server';
+import ServiceUser from '../services/user';
 import {
   IDataAuth,
   IDataLogin,
   IDataRegContact,
   IDataRegister,
-} from "../interface/IData";
-import { HashProvider } from "../Provider/hash";
+} from '../interface/IData';
+import { HashProvider } from '../Provider/hash';
 
 const dbMessage: Array<IMessage> = [];
 
-const connection = server.ioConnection.on("connection", (socket) => {
+const connection = server.ioConnection.on('connection', (socket) => {
   const serviceUser = new ServiceUser();
-  socket.on("chat", (data) => {
+  socket.on('chat', (data) => {
     const message: IMessage = {
       userSend: socket.id,
       timeMessageSend: new Date().toString(),
@@ -23,20 +23,20 @@ const connection = server.ioConnection.on("connection", (socket) => {
     };
 
     dbMessage.push(message);
-    socket.broadcast.emit("getMessages", dbMessage);
+    socket.broadcast.emit('getMessages', dbMessage);
   });
 
-  socket.on("getMessages", (data) => {
-    socket.emit("getMessages", dbMessage);
+  socket.on('getMessages', (data) => {
+    socket.emit('getMessages', dbMessage);
   });
 
-  socket.on("login", (data: IDataLogin) => {
+  socket.on('login', (data: IDataLogin) => {
     const userFound = serviceUser.findUserByEmail(data.email);
     if (!userFound) {
-      socket.emit("login", {
+      socket.emit('login', {
         status: 404,
-        error: "User not Found",
-        message: "",
+        error: 'User not Found',
+        message: '',
       });
     } else {
       const hashProvider = new HashProvider();
@@ -46,58 +46,58 @@ const connection = server.ioConnection.on("connection", (socket) => {
       );
 
       if (!userLogin) {
-        socket.emit("login", {
+        socket.emit('login', {
           status: 404,
-          message: "Credentials invalid, verify your parameters",
+          message: 'Credentials invalid, verify your parameters',
         });
       } else {
         // if userFound
-        console.log("Successfully logged in")
-        socket.emit("login", {
+        console.log('Successfully logged in');
+        socket.emit('login', {
           status: 200,
-          message: "User logged",
-          error: "",
+          message: 'User logged',
+          error: '',
         });
       }
     }
   });
 
-  socket.on("registerContact", (data: IDataRegContact) => {
+  socket.on('registerContact', (data: IDataRegContact) => {
     if (!serviceUser.findUserByEmail(data.userAuth)) {
-      socket.emit("registerContact", {
+      socket.emit('registerContact', {
         status: 404,
-        message: "User not found",
+        message: 'User not found',
       });
     } else {
       const saveContact = serviceUser.insertContact(data);
-      socket.emit("registerContact", saveContact);
+      socket.emit('registerContact', saveContact);
     }
   });
   // Não mexa pq está com BO
-  socket.on("registerGroup", (data: IDataRegContact) => {
+  socket.on('registerGroup', (data: IDataRegContact) => {
     if (!serviceUser.findUserByEmail(data.userEmail)) {
-      socket.emit("registerGroup", {
+      socket.emit('registerGroup', {
         status: 404,
-        message: "User not found",
+        message: 'User not found',
       });
     } else {
       const saveContact = serviceUser.insertContact(data);
 
-      socket.emit("registerGroup", saveContact);
+      socket.emit('registerGroup', saveContact);
     }
   });
 
-  socket.on("getAllList", (data: IDataAuth) => {
+  socket.on('getAllList', (data: IDataAuth) => {
     const user = serviceUser.findUserByEmail(data.email);
-    console.log("-> ", user);
+    console.log('-> ', user);
     if (!user) {
-      socket.emit("getAllList", {
+      socket.emit('getAllList', {
         status: 404,
-        message: "User not found",
+        message: 'User not found',
       });
     } else {
-      console.log("oi");
-      socket.emit("getAllList", {
+      console.log('oi');
+      socket.emit('getAllList', {
         listContact: user.listContacts,
         listGroups: user.listGroups,
         user: user.email,
@@ -105,23 +105,23 @@ const connection = server.ioConnection.on("connection", (socket) => {
     }
   });
 
-  socket.on("register", (data: IDataRegister) => {
+  socket.on('register', (data: IDataRegister) => {
     const userFound = serviceUser.findUserByEmail(data.email);
 
     if (userFound) {
-      socket.emit("register", {
-        status: 404,
-        message: "User already exists",
+      socket.emit('register', {
+        status: 409,
+        message: 'User already exists',
       });
     } else {
       const dataService = serviceUser.createUser(data);
       // if userFound
       if (dataService.status === 404) {
-        socket.emit("register", dataService);
+        console.info('Cadastrado! #1');
+        socket.emit('register', dataService);
       } else {
-        socket.emit("register", {
-          dataService,
-        });
+        console.info('Cadastrado! #2');
+        socket.emit('register', dataService);
       }
     }
   });
