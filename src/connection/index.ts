@@ -89,14 +89,12 @@ const connection = server.ioConnection.on('connection', (socket) => {
 
   socket.on('getAllList', (data: IDataAuth) => {
     const user = serviceUser.findUserByEmail(data.email);
-    console.log('-> ', user);
     if (!user) {
       socket.emit('getAllList', {
         status: 404,
         message: 'User not found',
       });
     } else {
-      console.log('oi');
       socket.emit('getAllList', {
         listContact: user.listContacts,
         listGroups: user.listGroups,
@@ -117,10 +115,8 @@ const connection = server.ioConnection.on('connection', (socket) => {
       const dataService = serviceUser.createUser(data);
       // if userFound
       if (dataService.status === 404) {
-        console.info('Cadastrado! #1');
         socket.emit('register', dataService);
       } else {
-        console.info('Cadastrado! #2');
         socket.emit('register', dataService);
       }
     }

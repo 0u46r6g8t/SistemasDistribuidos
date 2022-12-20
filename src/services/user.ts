@@ -1,8 +1,9 @@
-import { IUser, IUserBanco } from "../interface/IUser";
-import { UsersData } from "../assets/data/user";
-import { IHash } from "../Provider/interface/hash";
-import { HashProvider } from "../Provider/hash";
-import { IDataRegContact, IDataRegGroup } from "../interface/IData";
+import { IUser, IUserBanco } from '../interface/IUser';
+import { UsersData } from '../assets/data/user';
+import { IHash } from '../Provider/interface/hash';
+import { HashProvider } from '../Provider/hash';
+import { IDataRegContact, IDataRegGroup } from '../interface/IData';
+import { v4 as uuid } from 'uuid';
 
 export default class ServiceUser {
   private readonly hashProvider: IHash;
@@ -14,36 +15,35 @@ export default class ServiceUser {
   public createUser = (data: IUser) => {
     if (this.findUserByEmail(data.email)) {
       return {
-        error: "User already exists",
+        error: 'User already exists',
         status: 409,
-        message: "",
+        message: '',
       };
     }
 
     if (this.findUserByUsername(data.name)) {
       return {
-        error: "User already exists",
+        error: 'User already exists',
         status: 409,
-        message: "",
+        message: '',
       };
     }
 
     const { password, ...user } = data;
 
     var passwordTemp = this.hashProvider.generate(password);
-    console.log(data);
     UsersData.push({
-      id: `${UsersData.length + 1}`,
+      id: uuid(),
       ...user,
       password: passwordTemp,
       listContacts: [],
-      listGroups: []
+      listGroups: [],
     });
 
     return {
       status: 200,
       message: `Successfully user created`,
-      error: "",
+      error: '',
     };
   };
 
@@ -54,7 +54,7 @@ export default class ServiceUser {
       return {
         status: 404,
         error: `User not found`,
-        message: "",
+        message: '',
       };
     }
 
@@ -67,7 +67,7 @@ export default class ServiceUser {
     return {
       status: 200,
       message: UsersData[indexUser],
-      error: "",
+      error: '',
     };
   };
 
@@ -96,21 +96,21 @@ export default class ServiceUser {
     const user = this.findUserByEmail(data.userAuth);
     const contact = user.listContacts?.filter(
       (item) => item.address === data.address
-      )[0];
-      if (contact) {
-        return {
-          status: 409,
-        error: "Contact already exists in list",
-        message: "",
+    )[0];
+    if (contact) {
+      return {
+        status: 409,
+        error: 'Contact already exists in list',
+        message: '',
       };
     }
-    var { userEmail, ...contactNew } = data;
-    user.listContacts?.push({...contactNew});
-    
+    const { userAuth, ...contactNew } = data;
+    user.listContacts?.push({ ...contactNew });
+
     return {
       status: 200,
-      message: "Contact save your list",
-      error: "",
+      message: 'Contact save your list',
+      error: '',
     };
   };
 
@@ -123,8 +123,8 @@ export default class ServiceUser {
     if (contact) {
       return {
         status: 409,
-        error: "Group already exists in list",
-        message: "",
+        error: 'Group already exists in list',
+        message: '',
       };
     }
     var { userEmail, ...contactGroup } = data;
@@ -133,8 +133,8 @@ export default class ServiceUser {
 
     return {
       status: 200,
-      message: "Contact save your list",
-      error: "",
+      message: 'Contact save your list',
+      error: '',
     };
   };
 }
