@@ -8,15 +8,17 @@ export const UsersData: IUserBanco[] = [
     password: "$2b$05$zwrfgsxsaG5oDw3Ipq87I.CR.g.HNUL5js26WjJCpyk9xmxcBnyFu",
     listContacts: [],
     listGroups: [],
+    listKeysContact: []
   },
   {
     id: "611e86a3-feb7-4cf2-b54b-cc8802bcd999",
-    email: "rafaelomodei@alunos.utfpr.edu.br",
+    email: "a@a.com",
     name: "omodei",
     password: "$2b$05$0dxJDslEL6judoVosCaJ4OoYKosrYlGUvPTGTgAF6xoKUXQhQ.O4W", 
     // omodei1234
     listContacts: [],
     listGroups: [],
+    listKeysContact: []
   },
   {
     id: "ae88078f-f84c-40cd-bf32-0c29b8dad396",
@@ -26,6 +28,7 @@ export const UsersData: IUserBanco[] = [
     // capeletti1234
     listContacts: [],
     listGroups: [],
+    listKeysContact: []
   },
   {
     id: "d59785e2-73ec-4370-a53b-e3265a26f3db",
@@ -35,5 +38,6 @@ export const UsersData: IUserBanco[] = [
     // jeferson1234
     listContacts: [],
     listGroups: [],
+    listKeysContact: []
   },
 ];

@@ -24,3 +24,9 @@ export interface IDataRegGroup extends IGroups {
 export interface IDataAuth {
   email: string;
 }
+
+export interface IDataPrivate {
+  from: string;
+  to: string;
+  content: string;
+}

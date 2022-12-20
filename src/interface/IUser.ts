@@ -1,4 +1,4 @@
-import { IContacts, IGroups } from "./IListsComplete";
+import { IContacts, IGroups,IKeysContact } from "./IListsComplete";
 
 export interface IUser {
   name: string;
@@ -6,6 +6,7 @@ export interface IUser {
   email: string;
   listContacts?: IContacts[];
   listGroups?: IGroups[];
+  listKeysContact?: IKeysContact[];
 }
 
 export interface IUserBanco extends IUser {

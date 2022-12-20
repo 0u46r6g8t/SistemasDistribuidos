@@ -92,19 +92,55 @@ export default class ServiceUser {
     return data;
   };
 
+  public saveKey = (user: IUser, key: string, user_email: string) => {
+    user.listKeysContact?.push({ key, to: user_email });
+  }
+
   public insertContact = (data: IDataRegContact) => {
+    // console.log("data ->", data);
     const user = this.findUserByEmail(data.userAuth);
-    const contact = user.listContacts?.filter(
-      (item) => item.address === data.address
+    // console.log("user ->",user);
+    const contact = UsersData.filter(
+      (item) => item.email === data.userEmail
     )[0];
-    if (contact) {
+
+    if (!contact) {
       return {
-        status: 409,
-        error: 'Contact already exists in list',
+        status: 404,
+        error: 'User not found',
         message: '',
       };
     }
+    
     const { userAuth, ...contactNew } = data;
+
+    const hasContact = user.listContacts?.filter(contact => contact.userEmail === data.userEmail)[0];
+    
+    if(hasContact) {  
+      return {
+        status: 400,
+        error: 'User already has contact',
+        message: '',
+      };  
+    }
+    
+    const hasKey = user.listKeysContact?.filter(keys => keys.to === data.userEmail)[0];
+    
+    if(hasKey) {  
+      user.listContacts?.push({ ...contactNew });
+      
+      return {
+        status: 200,
+        error: '',
+        message: 'User ',
+      };  
+    }
+    
+    const keyActive = uuid()
+
+    this.saveKey(user, keyActive, contactNew.userEmail)
+    this.saveKey(contact, keyActive, user.email)
+
     user.listContacts?.push({ ...contactNew });
 
     return {

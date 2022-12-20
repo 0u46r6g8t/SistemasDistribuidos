@@ -8,22 +8,29 @@ import {
   IDataLogin,
   IDataRegContact,
   IDataRegister,
+  IDataPrivate,
 } from '../interface/IData';
 import { HashProvider } from '../Provider/hash';
+import { UsersData } from '../assets/data/user';
 
 const dbMessage: Array<IMessage> = [];
 
 const connection = server.ioConnection.on('connection', (socket) => {
   const serviceUser = new ServiceUser();
-  socket.on('chat', (data) => {
-    const message: IMessage = {
-      userSend: socket.id,
-      timeMessageSend: new Date().toString(),
-      messages: data.messages,
-    };
 
-    dbMessage.push(message);
-    socket.broadcast.emit('getMessages', dbMessage);
+  socket.on('joinChatPrivate', (to: string) => {
+    console.log('joinChatPrivate', to);
+    console.log('joinChatPrivate:socketID: ', socket.id);
+
+    socket.join(to);
+  });
+
+  socket.on('chatPrivate', ({ from, content, to }: IDataPrivate) => {
+    console.log(from, content, to);
+    socket.broadcast.emit('chatPrivate', {
+      content,
+      from,
+    });
   });
 
   socket.on('getMessages', (data) => {
