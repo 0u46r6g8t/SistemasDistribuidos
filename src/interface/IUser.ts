@@ -1,4 +1,4 @@
-import { IContacts, IGroups,IKeysContact } from "./IListsComplete";
+import { IContacts, IGroups, IKeysContact } from './IListsComplete';
 
 export interface IUser {
   name: string;

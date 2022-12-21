@@ -83,7 +83,6 @@ export default class ServiceUser {
 
   public findUserByEmail = (email: string) => {
     const data = UsersData.filter((user) => user.email === email)[0];
-
     return data;
   };
 
@@ -94,7 +93,7 @@ export default class ServiceUser {
 
   public saveKey = (user: IUser, key: string, user_email: string) => {
     user.listKeysContact?.push({ key, to: user_email });
-  }
+  };
 
   public insertContact = (data: IDataRegContact) => {
     // console.log("data ->", data);
@@ -111,37 +110,47 @@ export default class ServiceUser {
         message: '',
       };
     }
-    
-    const { userAuth, ...contactNew } = data;
 
-    const hasContact = user.listContacts?.filter(contact => contact.userEmail === data.userEmail)[0];
-    
-    if(hasContact) {  
+    const { userAuth, ...contactNew } = data;
+    const currentContact = {
+      userEmail: contactNew.userEmail,
+      name: contact.name,
+      photo: contactNew.photo,
+    };
+    console.log('insertContact::userB: ', currentContact);
+
+    const hasContact = user.listContacts?.filter(
+      (contact) => contact.userEmail === data.userEmail
+    )[0];
+
+    if (hasContact) {
       return {
         status: 400,
         error: 'User already has contact',
         message: '',
-      };  
+      };
     }
-    
-    const hasKey = user.listKeysContact?.filter(keys => keys.to === data.userEmail)[0];
-    
-    if(hasKey) {  
-      user.listContacts?.push({ ...contactNew });
-      
+
+    const hasKey = user.listKeysContact?.filter(
+      (keys) => keys.to === data.userEmail
+    )[0];
+
+    if (hasKey) {
+      user.listContacts?.push({ ...currentContact });
+
       return {
         status: 200,
         error: '',
         message: 'User ',
-      };  
+      };
     }
-    
-    const keyActive = uuid()
 
-    this.saveKey(user, keyActive, contactNew.userEmail)
-    this.saveKey(contact, keyActive, user.email)
+    const keyActive = uuid();
 
-    user.listContacts?.push({ ...contactNew });
+    this.saveKey(user, keyActive, contactNew.userEmail);
+    this.saveKey(contact, keyActive, user.email);
+
+    user.listContacts?.push({ ...currentContact });
 
     return {
       status: 200,
@@ -152,20 +161,6 @@ export default class ServiceUser {
 
   public insertGroup = (data: IDataRegGroup) => {
     const user = this.findUserByEmail(data.userEmail);
-
-    const contact = user.listContacts?.filter(
-      (item) => item.address === data.address
-    )[0];
-    if (contact) {
-      return {
-        status: 409,
-        error: 'Group already exists in list',
-        message: '',
-      };
-    }
-    var { userEmail, ...contactGroup } = data;
-
-    user.listGroups?.push(contactGroup);
 
     return {
       status: 200,

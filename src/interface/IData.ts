@@ -30,3 +30,10 @@ export interface IDataPrivate {
   to: string;
   content: string;
 }
+
+export interface ILog {
+  log: any;
+  from: string;
+  to?: string;
+  status?: string;
+}
